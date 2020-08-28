@@ -13,12 +13,10 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
 
-  const isValidUrl = url => {
-    var expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
-    var regex = new RegExp(expression);
-    var t = 'www.google.com';
-
-    return t.match(regex);
+  const isValidUrl = (url : string) => {
+    const expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
+    const regex = new RegExp(expression);
+    return url.match(regex);
   }
 
   app.get('/filteredimage', async (req,res, next) => {
@@ -29,7 +27,7 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
       if (!isValidUrl(req.query.image_url)){
         throw new Error(`Url given is invalid`)
       }
-      const filtered = await filterImageFromURL(req.query.image_url)
+      const filtered : string = await filterImageFromURL(req.query.image_url)
       res.status(200).sendFile(filtered, () => {
         deleteLocalFiles([filtered])
       })
