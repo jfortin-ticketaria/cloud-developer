@@ -1,4 +1,4 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
@@ -18,8 +18,7 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
     const regex = new RegExp(expression);
     return url.match(regex);
   }
-
-  app.get('/filteredimage', async (req,res, next) => {
+  app.get('/filteredimage', async (req : Request, res : Response) => {
     try {
       if (!req.query.image_url) {
         throw new Error(`You must enter an image url`)
