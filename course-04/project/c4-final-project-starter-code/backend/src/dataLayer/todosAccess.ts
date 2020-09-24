@@ -15,7 +15,6 @@ export class TodosAccess {
   constructor(
     private readonly docClient: DocumentClient = createDynamoDBClient(),
     private readonly todosTableName = process.env.TODO_TABLE,
-    private readonly todosTableIdIndex = process.env.TODO_TABLE_INDEX,
     private readonly todosTableIndexByUser = process.env.TODO_TABLE_BY_USER
   ) {}
 
@@ -51,12 +50,9 @@ export class TodosAccess {
       .delete({
         TableName: this.todosTableName,
         Key: {
-          [this.todosTableIdIndex]: todoId
+          todoId,
+          userId
         },
-        ExpressionAttributeValues: {
-          ':userId': userId
-        },
-        ConditionExpression: 'userId = :userId',
         ReturnValues: 'NONE'
       })
       .promise()
@@ -82,7 +78,8 @@ export class TodosAccess {
       .update({
         TableName: this.todosTableName,
         Key: {
-          [this.todosTableIdIndex]: todoId
+          todoId,
+          userId
         },
         UpdateExpression: 'SET dueDate= :dd, #nm = :n, done = :done',
         ExpressionAttributeNames: {
@@ -92,9 +89,7 @@ export class TodosAccess {
           ':n': todoRequest.name,
           ':dd': todoRequest.dueDate,
           ':done': todoRequest.done,
-          ':userId': userId
         },
-        ConditionExpression: 'userId = :userId',
         ReturnValues: 'UPDATED_NEW'
       })
       .promise()

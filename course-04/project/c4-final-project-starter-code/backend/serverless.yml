@@ -17,8 +17,7 @@ provider:
     apiGateway: true
 
   environment:
-    TODO_TABLE: Todos-${self:provider.stage}
-    TODO_TABLE_INDEX: todoId
+    TODO_TABLE: Todos-v2-${self:provider.stage}
     TODO_TABLE_BY_USER: byUserId
     S3_BUCKET: serverless-udagram-jnic-bucket-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
@@ -170,13 +169,15 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-          - AttributeName: ${self:provider.environment.TODO_TABLE_INDEX}
+          - AttributeName: todoId
             AttributeType: S
           - AttributeName: userId
             AttributeType: S
         KeySchema:
-          - AttributeName: ${self:provider.environment.TODO_TABLE_INDEX}
+          - AttributeName: userId
             KeyType: HASH
+          - AttributeName: todoId
+            KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.TODO_TABLE}
         GlobalSecondaryIndexes:
