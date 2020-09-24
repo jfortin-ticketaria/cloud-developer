@@ -88,7 +88,7 @@ export class TodosAccess {
         ExpressionAttributeValues: {
           ':n': todoRequest.name,
           ':dd': todoRequest.dueDate,
-          ':done': todoRequest.done,
+          ':done': todoRequest.done
         },
         ReturnValues: 'UPDATED_NEW'
       })
@@ -104,14 +104,13 @@ export class TodosAccess {
       .update({
         TableName: this.todosTableName,
         Key: {
-          [this.todosTableIdIndex]: todoId
+          userId,
+          todoId
         },
         UpdateExpression: 'SET attachmentUrl = :url',
         ExpressionAttributeValues: {
           ':url': url,
-          ':userId': userId
         },
-        ConditionExpression: 'userId = :userId',
         ReturnValues: 'UPDATED_NEW'
       })
       .promise()
